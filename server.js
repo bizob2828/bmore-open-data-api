@@ -8,5 +8,6 @@ const models = require('./models');
 apiApp.setup(app);
 
 models.sequelize.sync().then(() => {
+  // eslint-disable-next-line no-console
   app.listen(PORT, () => console.log(`Open Data API Listening on ${PORT}`));
 });

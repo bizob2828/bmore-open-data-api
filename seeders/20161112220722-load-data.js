@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 
 module.exports = {
-  up: function (queryInterface, Sequelize) {
+  up: function(queryInterface) {
     return fs.readFileAsync('./seeders/police-stations.json')
       .then((policeStations) => {
         return queryInterface.bulkInsert('PoliceStations', JSON.parse(policeStations));
@@ -16,7 +16,7 @@ module.exports = {
       });
   },
 
-  down: function (queryInterface, Sequelize) {
+  down: function(queryInterface) {
     return queryInterface.bulkDelete('Restaurants', null, {})
       .then(() => {
         return queryInterface.bulkDelete('PoliceStations', null, {});

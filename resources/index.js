@@ -1,3 +1,4 @@
+'use strict';
 const app = require('express')();
 const policeController = require('./policeController');
 const restaurants = require('./restaurantController');
