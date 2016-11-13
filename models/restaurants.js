@@ -8,14 +8,15 @@ module.exports = function(sequelize, DataTypes) {
     lat: DataTypes.FLOAT,
     long: DataTypes.FLOAT
   }, {
+    timestamps: false,
     classMethods: {
       associate: function(models) {
         Restaurants.belongsTo(models.PoliceStations, {
-          foreignKey: 'id',
-          as: 'stationId'
+          foreignKey: 'stationId'
         });
       }
     }
   });
+
   return Restaurants;
 };

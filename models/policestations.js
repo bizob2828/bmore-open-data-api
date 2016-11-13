@@ -8,11 +8,7 @@ module.exports = function(sequelize, DataTypes) {
     lat: DataTypes.FLOAT,
     long: DataTypes.FLOAT
   }, {
-    classMethods: {
-      associate: function(models) {
-        PoliceStations.hasMany(models.Restaurants);
-      }
-    }
+    timestamps: false
   });
   return PoliceStations;
 };
