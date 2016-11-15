@@ -4,6 +4,7 @@ const requestStats = require('./lib/request-stats');
 const utilMiddleware = require('./lib/util-middleware');
 const resources = require('./resources');
 const bodyParser = require('body-parser');
+const paramValidator = require('declare-validator');
 
 
 module.exports.setup = (app) => {
@@ -11,6 +12,8 @@ module.exports.setup = (app) => {
   app.use(responseTime());
   app.use(bodyParser.json({limit: '50mb'}));
   app.use(bodyParser.urlencoded({extended: true}));
+  paramValidator.init(app);
   app.use(utilMiddleware.response);
+  app.use(utilMiddleware.formattedError);
   app.use('/api/', resources);
 };

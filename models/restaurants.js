@@ -12,7 +12,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Restaurants.belongsTo(models.PoliceStations, {
-          foreignKey: 'stationId'
+          foreignKey: 'stationId',
+          as: 'police_station'
         });
       }
     }

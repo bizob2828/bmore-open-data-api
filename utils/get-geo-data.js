@@ -1,11 +1,10 @@
 'use strict';
 const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs'));
 const gMapsClient = require('@google/maps').createClient({
   key: process.env.GMAPS_KEY
 });
 
-function geocodeData(station) {
+module.exports.getGeoData = function geocodeData(station) {
   return new Promise((resolve, reject) => {
     gMapsClient.geocode({ address: `${station.address} ${station.zip}`}, (err, result) => {
       if (err) {
@@ -18,13 +17,5 @@ function geocodeData(station) {
       return resolve(station);
     });
   });
-}
+};
 
-fs.readFileAsync('./seeders/restaurants.json.orig')
-  .then((data) => {
-    let jsonData = JSON.parse(data.toString());
-    return Promise.map(jsonData, (station) => {
-      return geocodeData(station);
-    });
-  })
-  .then((result) => console.log(JSON.stringify(result))); // eslint-disable-line no-console
