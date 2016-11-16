@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const paramValidator = require('declare-validator');
 
 
-module.exports.setup = (app) => {
+module.exports.setup = function(app) {
   app.use(requestStats());
   app.use(responseTime());
   app.use(bodyParser.json({limit: '50mb'}));

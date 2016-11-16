@@ -5,9 +5,14 @@ const apiApp = require('./app');
 const PORT = 3000;
 const models = require('./models');
 
-apiApp.setup(app);
 
-models.sequelize.sync().then(() => {
+return models.sequelize.sync().then(() => {
+  apiApp.setup(app);
   // eslint-disable-next-line no-console
   app.listen(PORT, () => console.log(`Open Data API Listening on ${PORT}`));
+})
+.catch((err) => {
+  // eslint-disable-next-line no-console
+  console.log('cannot sync the db');
+  process.exit(1);
 });

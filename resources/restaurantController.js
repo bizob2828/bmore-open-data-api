@@ -2,8 +2,21 @@
 const restaurantModel = require('../models').Restaurants;
 const policeStationModel = require('../models').PoliceStations;
 const _ = require('lodash');
-const utils = require('../utils/get-geo-data');
-const constants = require('../utils/constants');
+const utils = require('lib/get-geo-data');
+const constants = require('lib/constants');
+
+function generateLinks(url, page, limit) {
+  let links = [];
+
+  if(page !== 1) {
+    links.push({ rel: 'first', href: `${url}?limit=${limit}&page=1` });
+    links.push({ rel: 'prev', href: `${url}?limit=${limit}&page=${page - 1}` });
+  }
+
+  links.push({ rel: 'next', href: `${url}?limit=${limit}&page=${page + 1}`});
+
+  return links;
+}
 
 module.exports.getAll = (req, res) => {
   let limit = parseInt(req.query.limit) || 100
@@ -22,12 +35,8 @@ module.exports.getAll = (req, res) => {
   }
 
   return restaurantModel.findAll(params).then((results) => {
-    let url = `${req.baseUrl}${req._parsedUrl.pathname}`;
-    res.respond(_.map(results, (data) => data.dataValues), 200, [
-      { rel: 'first', href: `${url}?limit=${limit}&page=1` },
-      { rel: 'prev', href: `${url}?limit=${limit}&page=${page}` },
-      { rel: 'next', href: `${url}?limit=${limit}&page=${page + 1}`}
-    ]);
+    let links = generateLinks(`${req.baseUrl}${req._parsedUrl.pathname}`, page, limit);
+    res.respond(_.map(results, (data) => data.dataValues), 200, links);
   })
   .catch((err) => {
     res.error(err, 500, 'Unable to get all restaurants');
@@ -44,7 +53,7 @@ module.exports.get = (req, res) => {
     if (results) {
       res.respond(results.dataValues);
     } else {
-      res.respond({ message: 'Resource Not Found' }, 404);
+      res.respond({ message: 'Restaurant not found' }, 404);
     }
   })
   .catch((err) => {
@@ -58,7 +67,7 @@ module.exports.delete = (req, res) => {
     if (results) {
       res.respond({}, 204);
     } else {
-      res.respond({ message: 'Resource Not Found' }, 404);
+      res.respond({ message: 'Restaurant not found' }, 404);
     }
   })
   .catch((err) => {
@@ -79,7 +88,7 @@ module.exports.create = (req, res) => {
     });
   })
   .then((results) => {
-    res.respond(results.dataValues, 200);
+    res.respond(results.dataValues);
   })
   .catch((err) => {
     res.error(err, 500, 'Unable to create restaurant');
@@ -89,9 +98,9 @@ module.exports.create = (req, res) => {
 module.exports.update = (req, res) => {
   return restaurantModel.update(req.body, { where: { id: req.params.restaurantId } }).then((results) => {
     if (results[0]) {
-      res.respond({ message: 'Restaurant updated' }, 200);
+      res.respond({ message: 'Restaurant updated' });
     } else {
-      res.respond({ message: 'Resource Not Found' }, 404);
+      res.respond({ message: 'Restaurant not found' }, 404);
     }
   })
   .catch((err) => {

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm test",
+    "test": "istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
     "lint": "eslint ."
   },
   "author": "Bob Evans",
@@ -24,7 +24,15 @@
     "sequelize-cli": "^2.4.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "eslint": "^3.10.0",
-    "eslint-config-sparkpost": "^1.2.0"
+    "eslint-config-sparkpost": "^1.2.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.2",
+    "proxyquire": "^1.7.10",
+    "sinon": "^1.17.6",
+    "sinon-as-promised": "^4.0.2",
+    "sinon-chai": "^2.8.0"
   }
 }

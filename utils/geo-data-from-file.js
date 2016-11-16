@@ -1,7 +1,7 @@
 'use strict';
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
-const utils = require('./get-geo-data');
+const utils = require('lib/get-geo-data');
 
 fs.readFileAsync('./seeders/restaurants.json.orig')
   .then((data) => {
