@@ -10,12 +10,12 @@ describe('app setup test', () => {
       , paramStub = { init: sinon.stub() }
       , bodyParserStub = { json: sinon.stub(), urlencoded: sinon.stub() }
       , appSetup = proxyquire('../../app', {
-      'response-time': sinon.stub(),
-      './lib/request-stats': sinon.stub(),
-      './lib/util-middleware': sinon.stub(),
-      'body-parser': bodyParserStub,
-      'declare-validator': paramStub
-    });
+        'response-time': sinon.stub(),
+        './lib/request-stats': sinon.stub(),
+        './lib/util-middleware': sinon.stub(),
+        'body-parser': bodyParserStub,
+        'declare-validator': paramStub
+      });
 
     appSetup.setup(app);
     expect(app.use.callCount).to.equal(7);

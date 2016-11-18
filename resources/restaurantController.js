@@ -8,7 +8,7 @@ const constants = require('lib/constants');
 function generateLinks(url, page, limit) {
   let links = [];
 
-  if(page !== 1) {
+  if (page !== 1) {
     links.push({ rel: 'first', href: `${url}?limit=${limit}&page=1` });
     links.push({ rel: 'prev', href: `${url}?limit=${limit}&page=${page - 1}` });
   }
@@ -22,9 +22,11 @@ module.exports.getAll = (req, res) => {
   let limit = parseInt(req.query.limit) || 100
     , page = parseInt(req.query.page) || 1
     , stationId = parseInt(req.query.station_id)
+    , offset = page === 1 ? 0 : (page - 1) + limit
     , params = {
       limit: limit,
-      offset: page,
+      offset: offset,
+      order: 'name ASC',
       include: [{ model: policeStationModel, as: 'police_station', attributes: constants.STATION_COLUMNS }],
       attributes: constants.RESTAURANT_COLUMNS
     };
@@ -45,6 +47,7 @@ module.exports.getAll = (req, res) => {
 
 module.exports.get = (req, res) => {
   return restaurantModel.findOne({
+    order: 'nameASC',
     where: { id: req.params.restaurantId },
     include: [ { model: policeStationModel, as: 'police_station', attributes: constants.STATION_COLUMNS } ],
     attributes: constants.RESTAURANT_COLUMNS

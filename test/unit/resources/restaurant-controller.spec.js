@@ -62,7 +62,7 @@ describe('restaurant controller tests', () => {
       req.query.station_id = '8';
       return controller.getAll(req, res).then(() => {
         expect(restaurantMock.findAll.args[0][0].where).to.deep.equal({ stationId: 8 });
-       });
+      });
 
     });
 
@@ -74,7 +74,7 @@ describe('restaurant controller tests', () => {
         expect(res.respond.args[0][2]).to.deep.equal([
           { rel: 'first', href: '/api/resource?limit=10&page=1' },
           { rel: 'prev', href: '/api/resource?limit=10&page=14' },
-          { rel: 'next', href: '/api/resource?limit=10&page=16' },
+          { rel: 'next', href: '/api/resource?limit=10&page=16' }
         ]);
       });
 
@@ -173,7 +173,7 @@ describe('restaurant controller tests', () => {
 
       _.merge(createData, latLong, body);
       geoMock.getGeoData.resolves(latLong);
-      req.body = body
+      req.body = body;
       restaurantMock.create.resolves({ dataValues: createData });
 
       return controller.create(req, res).then(() => {

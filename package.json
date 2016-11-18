@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "serve": "node server.js"
   },
   "author": "Bob Evans",
   "license": "MIT",

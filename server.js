@@ -13,6 +13,6 @@ return models.sequelize.sync().then(() => {
 })
 .catch((err) => {
   // eslint-disable-next-line no-console
-  console.log('cannot sync the db');
+  console.log('cannot sync the db', err);
   process.exit(1);
 });
