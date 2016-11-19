@@ -99,7 +99,13 @@ module.exports.create = (req, res) => {
 };
 
 module.exports.update = (req, res) => {
-  return restaurantModel.update(req.body, { where: { id: req.params.restaurantId } }).then((results) => {
+  return restaurantModel.update({
+      name: req.body.name,
+      zip: req.body.zip,
+      hood: req.body.hood,
+      address: req.body.address,
+      stationId: req.body.station_id
+  }, { where: { id: req.params.restaurantId } }).then((results) => {
     if (results[0]) {
       res.respond({ message: 'Restaurant updated' });
     } else {
