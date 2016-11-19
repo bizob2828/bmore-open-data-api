@@ -22,7 +22,7 @@ module.exports.getAll = (req, res) => {
   let limit = parseInt(req.query.limit) || 100
     , page = parseInt(req.query.page) || 1
     , stationId = parseInt(req.query.station_id)
-    , offset = page === 1 ? 0 : (page - 1) + limit
+    , offset = page === 1 ? 0 : (page - 1) * limit
     , params = {
       limit: limit,
       offset: offset,
@@ -36,9 +36,9 @@ module.exports.getAll = (req, res) => {
     params.where = { stationId: stationId };
   }
 
-  return restaurantModel.findAll(params).then((results) => {
+  return restaurantModel.findAndCountAll(params).then((results) => {
     let links = generateLinks(`${req.baseUrl}${req._parsedUrl.pathname}`, page, limit);
-    res.respond(_.map(results, (data) => data.dataValues), 200, links);
+    res.respond(_.map(results.rows, (data) => data.dataValues), 200, links, results.count);
   })
   .catch((err) => {
     res.error(err, 500, 'Unable to get all restaurants');
