@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "password",
-    "database": "open_data_dev",
+    "database": "open_data_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

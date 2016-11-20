@@ -6,7 +6,8 @@
   "scripts": {
     "test": "istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
     "lint": "eslint .",
-    "serve": "node server.js"
+    "serve": "node server.js",
+    "seed": "sequelize db:migrate && sequelize db:seed:all"
   },
   "author": "Bob Evans",
   "license": "MIT",
