@@ -5,6 +5,13 @@ const _ = require('lodash');
 const utils = require('lib/get-geo-data');
 const constants = require('lib/constants');
 
+/**
+ * Create links for response
+ * @param {String} url url of request
+ * @param {Int} page number
+ * @param {Int} limit limit on request
+ * @param {Int} totalCount number of db records
+ */
 function generateLinks(url, page, limit, totalCount) {
   let links = [];
 
@@ -19,6 +26,14 @@ function generateLinks(url, page, limit, totalCount) {
   return links;
 }
 
+/**
+ * Returns a list of restaurants
+ * Defaults to limit 100, page 1
+ * To filter by station pass in req.query.station_id <id of police station>
+ * @param {Object} req request object
+ * @param {Object} res response object
+ * @return {Promise}
+ */
 module.exports.getAll = (req, res) => {
   let limit = parseInt(req.query.limit) || 100
     , page = parseInt(req.query.page) || 1
@@ -46,6 +61,12 @@ module.exports.getAll = (req, res) => {
   });
 };
 
+/**
+ * Returns a restaurant by id
+ * @param {Object} req request object
+ * @param {Object} res response object
+ * @return {Promise}
+ */
 module.exports.get = (req, res) => {
   return restaurantModel.findOne({
     order: 'nameASC',
@@ -66,6 +87,12 @@ module.exports.get = (req, res) => {
 
 };
 
+/**
+ * Deletes a restaurant by id
+ * @param {Object} req request object
+ * @param {Object} res response object
+ * @return {Promise}
+ */
 module.exports.delete = (req, res) => {
   return restaurantModel.destroy({ where: { id: req.params.restaurantId }}).then((results) => {
     if (results) {
@@ -79,6 +106,13 @@ module.exports.delete = (req, res) => {
   });
 };
 
+/**
+ * Creates a restaurant
+ * Valid params(req.body): name, zip, hood, address, station_id
+ * @param {Object} req request object
+ * @param {Object} res response object
+ * @return {Promise}
+ */
 module.exports.create = (req, res) => {
   return utils.getGeoData({ address: req.body.address, zip: req.body.zip }).then((geoData) => {
     return restaurantModel.create({
@@ -99,6 +133,13 @@ module.exports.create = (req, res) => {
   });
 };
 
+/**
+ * Updates a restaurant by id
+ * Valid params(req.body): name, zip, hood, address, station_id
+ * @param {Object} req request object
+ * @param {Object} res response object
+ * @return {Promise}
+ */
 module.exports.update = (req, res) => {
   return restaurantModel.update({
     name: req.body.name,

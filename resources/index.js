@@ -1,7 +1,7 @@
 'use strict';
 const app = require('express')();
-const policeController = require('./policeController');
-const restaurants = require('./restaurantController');
+const policeController = require('./police-controller');
+const restaurants = require('./restaurant-controller');
 const CreateValidator = require('../lib/create-validator');
 const IdValidator = require('../lib/id-validator');
 

@@ -19,7 +19,7 @@ describe('police controller tests', () => {
 
     res.respond = sinon.stub();
     res.error = sinon.stub();
-    controller = proxyquire('../../../resources/policeController', {
+    controller = proxyquire('../../../resources/police-controller', {
       '../models': { PoliceStations: modelMock }
     });
   });

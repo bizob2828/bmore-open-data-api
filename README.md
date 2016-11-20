@@ -2,10 +2,19 @@
 Provides CRUD for Baltimore Restaurants.  There is an association with the police district.  It also does geocoding to obtain lat, long based on Address.  This is intended to be used with https://github.com/bizob2828/bmore-open-data-ui.
 
 ## Prerequisites
-MySQL must installed on your local machine, and node.js > 4.x(https://github.com/creationix/nvm)
+MySQL must installed on your local machine
 
 ```
 brew install mysql
+```
+
+Node.js > 4.x
+https://github.com/creationix/nvm
+
+Google Map API Key that is set as an environment var
+https://developers.google.com/maps/documentation/javascript/get-api-key
+```
+export GMAPS_KEY=<api_key>
 ```
 
 ## Installation

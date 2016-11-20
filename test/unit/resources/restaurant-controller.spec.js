@@ -30,7 +30,7 @@ describe('restaurant controller tests', () => {
     res.respond = sinon.stub();
     res.error = sinon.stub();
 
-    controller = proxyquire('../../../resources/restaurantController', {
+    controller = proxyquire('../../../resources/restaurant-controller', {
       '../models': { Restaurants: restaurantMock, PoliceStations: stationMock },
       'lib/get-geo-data': geoMock
     });

@@ -1,4 +1,7 @@
 'use strict';
+/**
+ * Utility used to take open data and add lat/long to them
+ */
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const utils = require('lib/get-geo-data');

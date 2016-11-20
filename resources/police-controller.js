@@ -2,6 +2,12 @@
 const stationModel = require('../models').PoliceStations;
 const _ = require('lodash');
 
+/**
+ * Returns a list of police stations
+ * @param {Object} req request object
+ * @param {Object} res response object
+ * @return {Promise}
+ */
 module.exports.getAll = (req, res) => {
   return stationModel.findAll()
     .then((results) => {
