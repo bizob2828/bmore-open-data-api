@@ -56,6 +56,12 @@ describe('util middleware tests', () => {
 
     });
 
+    it('should attach count if specified', () => {
+      res.respond('foo', 200, 'links', 100);
+      expect(res.send.args[0][0]).to.equal('{"results":"foo","links":"links","total_count":100}');
+
+    });
+
   });
 
   describe('res.error', () => {

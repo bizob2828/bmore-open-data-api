@@ -5,7 +5,7 @@ const _ = require('lodash');
 const utils = require('lib/get-geo-data');
 const constants = require('lib/constants');
 
-function generateLinks(url, page, limit) {
+function generateLinks(url, page, limit, totalCount) {
   let links = [];
 
   if (page !== 1) {
@@ -14,6 +14,7 @@ function generateLinks(url, page, limit) {
   }
 
   links.push({ rel: 'next', href: `${url}?limit=${limit}&page=${page + 1}`});
+  links.push({ rel: 'last', href: `${url}?limit=${limit}&page=${Math.ceil(parseInt(totalCount) / parseInt(limit))}`});
 
   return links;
 }
@@ -37,7 +38,7 @@ module.exports.getAll = (req, res) => {
   }
 
   return restaurantModel.findAndCountAll(params).then((results) => {
-    let links = generateLinks(`${req.baseUrl}${req._parsedUrl.pathname}`, page, limit);
+    let links = generateLinks(`${req.baseUrl}${req._parsedUrl.pathname}`, page, limit, results.count);
     res.respond(_.map(results.rows, (data) => data.dataValues), 200, links, results.count);
   })
   .catch((err) => {
@@ -100,11 +101,11 @@ module.exports.create = (req, res) => {
 
 module.exports.update = (req, res) => {
   return restaurantModel.update({
-      name: req.body.name,
-      zip: req.body.zip,
-      hood: req.body.hood,
-      address: req.body.address,
-      stationId: req.body.station_id
+    name: req.body.name,
+    zip: req.body.zip,
+    hood: req.body.hood,
+    address: req.body.address,
+    stationId: req.body.station_id
   }, { where: { id: req.params.restaurantId } }).then((results) => {
     if (results[0]) {
       res.respond({ message: 'Restaurant updated' });

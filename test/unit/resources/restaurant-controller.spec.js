@@ -20,7 +20,7 @@ describe('restaurant controller tests', () => {
     stationMock = sinon.stub();
 
     restaurantMock = {
-      findAll: sinon.stub(),
+      findAndCountAll: sinon.stub(),
       findOne: sinon.stub(),
       destroy: sinon.stub(),
       create: sinon.stub(),
@@ -38,18 +38,20 @@ describe('restaurant controller tests', () => {
 
   describe('getAll tests', () => {
     it('should respond with appropriate data', () => {
-      restaurantMock.findAll.resolves([
+      restaurantMock.findAndCountAll.resolves({ rows: [
         { dataValues: 'foo' },
         { dataValues: 'baz' }
-      ]);
+      ], count: 500});
 
       return controller.getAll(req, res).then(() => {
         expect(res.respond.args[0]).to.deep.equal([
           ['foo', 'baz'],
           200,
           [
-            { rel: 'next', href: '/api/resource?limit=100&page=2' }
-          ]
+            { rel: 'next', href: '/api/resource?limit=100&page=2' },
+            { rel: 'last', href: '/api/resource?limit=100&page=5' }
+          ],
+          500
         ]);
 
         expect(res.error.callCount).to.equal(0);
@@ -58,31 +60,32 @@ describe('restaurant controller tests', () => {
     });
 
     it('should filter by police stations when qp is passed in', () => {
-      restaurantMock.findAll.resolves([]);
+      restaurantMock.findAndCountAll.resolves({ rows: [] });
       req.query.station_id = '8';
       return controller.getAll(req, res).then(() => {
-        expect(restaurantMock.findAll.args[0][0].where).to.deep.equal({ stationId: 8 });
+        expect(restaurantMock.findAndCountAll.args[0][0].where).to.deep.equal({ stationId: 8 });
       });
 
     });
 
     it('should use limit/page qp when passed in', () => {
-      restaurantMock.findAll.resolves([]);
+      restaurantMock.findAndCountAll.resolves({ rows: [], count: 500 });
       req.query.limit = 10;
       req.query.page = 15;
       return controller.getAll(req, res).then(() => {
         expect(res.respond.args[0][2]).to.deep.equal([
           { rel: 'first', href: '/api/resource?limit=10&page=1' },
           { rel: 'prev', href: '/api/resource?limit=10&page=14' },
-          { rel: 'next', href: '/api/resource?limit=10&page=16' }
+          { rel: 'next', href: '/api/resource?limit=10&page=16' },
+          { rel: 'last', href: '/api/resource?limit=10&page=50' }
         ]);
       });
 
     });
 
-    it('should respond with error when findAll call fails', () => {
+    it('should respond with error when findAndCountAll call fails', () => {
       let err = new Error('no restaurants');
-      restaurantMock.findAll.rejects(err);
+      restaurantMock.findAndCountAll.rejects(err);
 
       return controller.getAll(req, res).then(() => {
         expect(res.respond.callCount).to.equal(0);

@@ -18,7 +18,7 @@ describe('app setup test', () => {
       });
 
     appSetup.setup(app);
-    expect(app.use.callCount).to.equal(7);
+    expect(app.use.callCount).to.equal(8);
     expect(paramStub.init.callCount).to.equal(1);
 
   });
