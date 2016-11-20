@@ -17,7 +17,7 @@ npm install
 ```
 
 ## Seed data
-Note: Edit config/config.json and set the appropriate development username, password, and host
+**Note: *Edit config/config.json and set the appropriate development username, password, and host* **
 
 Sequelize is being used as the model and there are baseline files to load the schema.
 
@@ -26,7 +26,7 @@ echo "CREATE DATABASE open_data_dev;" | mysql -h <HOST> -u <USERNAME> -p<PASSWOR
 npm run seed
 ```
 
-Note: There cannot be a space between -p and the password, otherwise you wil have to enter it in the terminal.
+**Note: *There cannot be a space between -p and the password, otherwise you wil have to enter it in the terminal*. **
 
 ## Start Express.js server
 ```
