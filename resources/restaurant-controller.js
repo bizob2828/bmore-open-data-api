@@ -141,13 +141,20 @@ module.exports.create = (req, res) => {
  * @return {Promise}
  */
 module.exports.update = (req, res) => {
-  return restaurantModel.update({
+  let updateOpts = {
     name: req.body.name,
     zip: req.body.zip,
     hood: req.body.hood,
     address: req.body.address,
     stationId: req.body.station_id
-  }, { where: { id: req.params.restaurantId } }).then((results) => {
+  };
+
+  if (req.geoData) {
+    updateOpts.lat = req.geoData.lat;
+    updateOpts.long = req.geoData.long;
+  }
+
+  return restaurantModel.update(updateOpts, { where: { id: req.params.restaurantId } }).then((results) => {
     if (results[0]) {
       res.respond({ message: 'Restaurant updated' });
     } else {

@@ -10,6 +10,10 @@ describe('CRUD Tests', () => {
     it('should return restaurants', () => {
       return helpers.getRestaurants().then((results) => {
         let result = results.body.results[0];
+
+        expect(results.headers['x-total-mem-usage']).to.exist;
+        expect(results.headers['x-string-objects']).to.exist;
+        expect(results.headers['x-response-time']).to.exist;
         expect(results.statusCode).to.equal(200);
         expect(Object.keys(result)).to.deep.equal(['id', 'name', 'address', 'zip', 'hood', 'lat', 'long', 'police_station']);
         expect(Object.keys(result.police_station)).to.deep.equal(['id', 'name']);
@@ -74,10 +78,14 @@ describe('CRUD Tests', () => {
 
   describe('edit restaurant', () => {
     it('should update restaurant', () => {
-      var restId;
+      var restId
+        , lat
+        , long;
       return helpers.createRestaurant('FooBar').then((results) => {
         restId = results.body.results.id;
-        return request('put', `${baseUrl}/${restId}`, { address: '100 Lancaster St', name: 'BeerHaus' });
+        lat = results.body.results.lat;
+        long = results.body.results.long;
+        return request('put', `${baseUrl}/${restId}`, { address: '100 Lancaster St Baltimore MD', name: 'BeerHaus' });
       })
       .then((results) => {
         expect(results.statusCode).to.equal(200);
@@ -86,7 +94,9 @@ describe('CRUD Tests', () => {
       .then((results) => {
         let result = results.body.results;
         expect(result.name).to.equal('BeerHaus');
-        expect(result.address).to.equal('100 Lancaster St');
+        expect(result.address).to.equal('100 Lancaster St Baltimore MD');
+        expect(result.lat).to.not.equal(lat);
+        expect(result.long).to.not.equal(long);
       });
     });
 

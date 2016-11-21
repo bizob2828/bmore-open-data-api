@@ -218,6 +218,28 @@ describe('restaurant controller tests', () => {
 
     });
 
+    it('should update lat long if req.geoData exists', () => {
+      let req = { params: {}, body: {} };
+      req.geoData = { lat: 0, long: 0 };
+      req.body.address = 'foobar';
+      req.params.restaurantId = 1;
+      restaurantMock.update.resolves(['done']);
+      return controller.update(req, res).then(() => {
+        expect(restaurantMock.update.args[0][0]).to.deep.equal({
+          address: 'foobar',
+          lat: 0,
+          long: 0,
+          hood: undefined,
+          name: undefined,
+          stationId: undefined,
+          zip: undefined
+        });
+        expect(res.error.callCount).to.equal(0);
+        expect(res.respond.args[0][0]).to.deep.equal({ message: 'Restaurant updated'});
+      });
+
+    });
+
     it('should return 404 on update when restaurant does not exist', () => {
       restaurantMock.update.resolves([]);
       return controller.update(req, res).then(() => {
