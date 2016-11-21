@@ -52,3 +52,12 @@ Functional:
 ```
 npm run func-test
 ```
+
+## Instrumentation
+In development, instrumentation is off by default.  If you want to enable it. Set instrumentation.enabled = true in config/development.json
+
+You will see results of requests logged to ./instrumentation.log or directly in the console
+
+```
+info: Response Time: 19.261ms, Memory Used: 0.08191999999999999, String Objects: 244
+```

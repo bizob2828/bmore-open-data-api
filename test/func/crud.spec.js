@@ -9,11 +9,10 @@ describe('CRUD Tests', () => {
   describe('get collection', () => {
     it('should return restaurants', () => {
       return helpers.getRestaurants().then((results) => {
+        expect(results.headers['x-total-mem-usage']).to.not.exist;
+        expect(results.headers['x-string-objects']).to.not.exist;
+        expect(results.headers['x-response-time']).to.not.exist;
         let result = results.body.results[0];
-
-        expect(results.headers['x-total-mem-usage']).to.exist;
-        expect(results.headers['x-string-objects']).to.exist;
-        expect(results.headers['x-response-time']).to.exist;
         expect(results.statusCode).to.equal(200);
         expect(Object.keys(result)).to.deep.equal(['id', 'name', 'address', 'zip', 'hood', 'lat', 'long', 'police_station']);
         expect(Object.keys(result.police_station)).to.deep.equal(['id', 'name']);

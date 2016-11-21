@@ -2,6 +2,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
+const proxyquire = require('proxyquire').noCallThru();
 
 chai.use(require('sinon-chai'));
 
@@ -9,17 +10,34 @@ describe('util middleware tests', () => {
   let next
     , req
     , res
-    , utilsMiddleware;
+    , utilsMiddleware
+    , winstonMock
+    , configMock;
 
   beforeEach(() => {
+    configMock = { instrumentation: { enabled: true } };
+    winstonMock = {
+      add: sinon.stub(),
+      log: sinon.stub(),
+      transports: { File: 'foo' }
+    };
     next = sinon.stub();
     req = {};
     res = {};
     res.header = sinon.stub().returns(res);
     res.status = sinon.stub().returns(res);
     res.send = sinon.stub();
+    res._headers = {
+      'x-total-mem-usage': 10,
+      'x-response-time': '30ms',
+      'x-string-objects': 100
+    };
 
-    utilsMiddleware = require('lib/util-middleware');
+    utilsMiddleware = proxyquire('lib/util-middleware', {
+      'config': configMock,
+      'winston': winstonMock
+
+    });
   });
 
 
@@ -62,6 +80,21 @@ describe('util middleware tests', () => {
 
     });
 
+    it('should call winston if instrumentation is enabled', () => {
+      res.respond('foo');
+      expect(winstonMock.log.args[0][1]).to.equal('Response Time: 30ms, Memory Used: 10, String Objects: 100');
+
+    });
+
+    it('should call not winston if instrumentation is disabled', () => {
+      configMock.instrumentation.enabled = false;
+      res.respond('foo');
+      expect(winstonMock.log.callCount).to.equal(0);
+
+    });
+
+
+
   });
 
   describe('res.error', () => {
@@ -89,6 +122,19 @@ describe('util middleware tests', () => {
 
       expect(res.status.args[0][0]).to.equal(400);
       expect(res.send.args[0][0]).to.equal('{"errors":"my error message"}');
+
+    });
+
+    it('should call winston if instrumentation is enabled', () => {
+      res.error(new Error('foo'));
+      expect(winstonMock.log.args[0][1]).to.equal('Response Time: 30ms, Memory Used: 10, String Objects: 100');
+
+    });
+
+    it('should call not winston if instrumentation is disabled', () => {
+      configMock.instrumentation.enabled = false;
+      res.error(new Error('foo'));
+      expect(winstonMock.log.callCount).to.equal(0);
 
     });
 
