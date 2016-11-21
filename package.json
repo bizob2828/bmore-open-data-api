@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
+    "test": "eslint . && istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
+    "func-test": "eslint . && istanbul cover --report lcov --dir test/reports/func node_modules/.bin/_mocha test/func/*",
     "lint": "eslint .",
     "serve": "node server.js",
     "seed": "sequelize db:migrate && sequelize db:seed:all"
@@ -36,6 +37,7 @@
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6",
     "sinon-as-promised": "^4.0.2",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "supertest": "^2.0.1"
   }
 }

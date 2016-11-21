@@ -43,6 +43,12 @@ npm run serve
 ```
 
 ## Run tests
+Unit:
 ```
 npm test
+```
+
+Functional:
+```
+npm run func-test
 ```

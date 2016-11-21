@@ -69,7 +69,7 @@ module.exports.getAll = (req, res) => {
  */
 module.exports.get = (req, res) => {
   return restaurantModel.findOne({
-    order: 'nameASC',
+    order: 'name ASC',
     where: { id: req.params.restaurantId },
     include: [ { model: policeStationModel, as: 'police_station', attributes: constants.STATION_COLUMNS } ],
     attributes: constants.RESTAURANT_COLUMNS
