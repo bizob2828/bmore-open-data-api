@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "eslint . && istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
-    "func-test": "eslint . && istanbul cover --report lcov --dir test/reports/func node_modules/.bin/_mocha test/func/*",
+    "test": "NODE_ENV=test NODE_PATH=$NODE_PATH:. istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
+    "func-test": "NODE_ENV=test NODE_PATH=$NODE_PATH:. istanbul cover --report lcov --dir test/reports/func node_modules/.bin/_mocha test/func/*",
     "lint": "eslint .",
-    "serve": "node server.js",
+    "serve": "NODE_PATH=$NODE_PATH:. node server.js",
     "seed": "sequelize db:migrate && sequelize db:seed:all"
   },
   "author": "Bob Evans",
@@ -33,7 +33,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "eslint": "^3.10.0",
-    "eslint-config-sparkpost": "^1.2.0",
+    "eslint-config-sparkpost": "1.2.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
     "proxyquire": "^1.7.10",
