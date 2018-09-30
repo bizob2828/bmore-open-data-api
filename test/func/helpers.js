@@ -9,12 +9,11 @@ module.exports.getRestaurants = (page, station) => {
   }
 
   return request('get', url);
-
 };
 
 module.exports.createRestaurant = (name) => {
-  let opts = {
-    name: name,
+  const opts = {
+    name,
     zip: 21211,
     address: '616 w 33rd St',
     station_id: 8,
@@ -22,5 +21,4 @@ module.exports.createRestaurant = (name) => {
   };
 
   return request('post', baseUrl, opts);
-
 };

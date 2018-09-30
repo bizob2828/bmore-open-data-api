@@ -4,42 +4,55 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test NODE_PATH=$NODE_PATH:. istanbul cover --report lcov --dir test/reports/unit node_modules/.bin/_mocha test/unit/*",
-    "func-test": "NODE_ENV=test NODE_PATH=$NODE_PATH:. istanbul cover --report lcov --dir test/reports/func node_modules/.bin/_mocha test/func/*",
-    "lint": "eslint .",
+    "make-me-pretty": "prettier-eslint \"**/*.js\" --write",
+    "test": "NODE_ENV=test NODE_PATH=$NODE_PATH:. nyc --reporter=text-summary --reporter=lcov --report-dir=test/reports/unit/ mocha test/unit",
+    "func-test": "NODE_ENV=test NODE_PATH=$NODE_PATH:. nyc --reporter=text-summary --reporter=lcov --report-dir=test/reports/func/ mocha test/func/",
+    "lint": "eslint . --fix",
     "serve": "NODE_PATH=$NODE_PATH:. node server.js",
-    "seed": "sequelize db:migrate && sequelize db:seed:all"
+    "seed": "sequelize db:migrate && sequelize db:seed:all",
+    "precommit": "lint-staged",
+    "prepush": "auditmated"
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "npm run make-me-pretty",
+      "npm run lint",
+      "git add"
+    ]
   },
   "author": "Bob Evans",
   "license": "MIT",
   "dependencies": {
-    "@google/maps": "^0.3.0",
-    "bluebird": "^3.4.6",
+    "@google/maps": "^0.5.5",
+    "bluebird": "^3.5.2",
     "body-parser": "^1.15.2",
-    "config": "^1.24.0",
+    "config": "^2.0.1",
     "cors": "^2.8.1",
     "declare-validator": "^1.1.0",
     "express": "^4.14.0",
-    "lodash": "^4.16.6",
+    "lodash": "^4.17.11",
     "memwatch-next": "^0.3.0",
     "mysql": "^2.12.0",
     "on-headers": "^1.0.1",
     "response-time": "^2.3.1",
-    "sequelize": "^3.25.0",
-    "sequelize-cli": "^2.4.0",
-    "winston": "^2.3.0"
+    "sequelize": "^4.39.0",
+    "sequelize-cli": "^4.1.1",
+    "winston": "^3.1.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "eslint": "^3.10.0",
-    "eslint-config-sparkpost": "1.2.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^3.1.2",
-    "proxyquire": "^1.7.10",
-    "sinon": "^1.17.6",
-    "sinon-as-promised": "^4.0.2",
-    "sinon-chai": "^2.8.0",
-    "supertest": "^2.0.1"
+    "auditmated": "^0.1.2",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^4.19.1",
+    "eslint-config-sparkpost": "^1.9.0",
+    "husky": "^1.0.1",
+    "lint-staged": "^7.3.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
+    "prettier-eslint-cli": "^4.7.1",
+    "proxyquire": "^2.1.0",
+    "sinon": "^6.3.4",
+    "sinon-chai": "^3.2.0",
+    "supertest": "^3.3.0"
   }
 }

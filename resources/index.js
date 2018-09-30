@@ -6,14 +6,15 @@ const CreateValidator = require('lib/create-validator');
 const IdValidator = require('lib/id-validator');
 const addressLookup = require('lib/edit-lookup');
 
-app.route('/police-stations')
-  .get(policeController.getAll);
+app.route('/police-stations').get(policeController.getAll);
 
-app.route('/restaurants')
+app
+  .route('/restaurants')
   .get(restaurants.getAll)
   .post(CreateValidator, restaurants.create);
 
-app.route('/restaurants/:restaurantId')
+app
+  .route('/restaurants/:restaurantId')
   .all(IdValidator)
   .get(restaurants.get)
   .delete(restaurants.delete)

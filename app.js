@@ -8,8 +8,7 @@ const paramValidator = require('declare-validator');
 const cors = require('cors');
 const config = require('config');
 
-
-module.exports.setup = function(app) {
+module.exports.setup = function setup(app) {
   app.use(cors());
 
   // only enable instrumentation middleware when config flag is enabled
@@ -17,8 +16,8 @@ module.exports.setup = function(app) {
     app.use(requestStats());
     app.use(responseTime());
   }
-  app.use(bodyParser.json({limit: '50mb'}));
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ extended: true }));
   paramValidator.init(app);
   app.use(utilMiddleware.response);
   app.use(utilMiddleware.formattedError);

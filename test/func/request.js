@@ -3,7 +3,7 @@ const request = require('supertest');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
-var app;
+let app;
 
 /**
  * Utility function for making requests in functional tests
@@ -19,9 +19,9 @@ var app;
  * @param payload {Object} - payload for post, put, etc bodys/payloads
  * @returns {*|promise}
  */
-module.exports = function(method, url, payload) {
+module.exports = function makeRequest(method, url, payload) {
   return new Promise((resolve, reject) => {
-    var call;
+    let call;
 
     // make sure app was setup
     if (typeof app === 'undefined') {
@@ -37,22 +37,19 @@ module.exports = function(method, url, payload) {
       call.set('Content-Type', 'application/json');
 
       // send and end
-      call.send(payload)
-        .end(function(err, res) {
-          if (err || res.statusCode >= 300) {
-
-            if (!_.isError(err)) {
-              err = extractErrorFromResponse(res);
-            }
-
-            reject(err);
-          } else {
-            resolve(res);
+      call.send(payload).end((err, res) => {
+        if (err || res.statusCode >= 300) {
+          if (!_.isError(err)) {
+            err = extractErrorFromResponse(res);
           }
-        });
+
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
     }
   });
-
 };
 
 /**
@@ -62,12 +59,14 @@ module.exports = function(method, url, payload) {
  * @returns
  */
 function extractErrorFromResponse(response) {
-  let errMessage = _.get(response, 'body.errors[0]')
-    , err = new Error();
+  const errMessage = _.get(response, 'body.errors[0]');
+  const err = new Error();
 
   // only get stuff we need
   err.response = _.pick(response, ['body', 'statusCode', 'headers']);
-  err.message = errMessage ? JSON.stringify(errMessage) : 'There has been an error.  Please inspect the error object for more information.';
+  err.message = errMessage
+    ? JSON.stringify(errMessage)
+    : 'There has been an error.  Please inspect the error object for more information.';
 
   // alias status on base obj for backwards compatibility
   err.status = err.response.statusCode;
@@ -75,7 +74,6 @@ function extractErrorFromResponse(response) {
 
   return err;
 }
-
 
 /**
  * Provides a onetime setup of the express App so that the express app doesn't need to be passed in to each request call
@@ -85,13 +83,13 @@ function extractErrorFromResponse(response) {
  *
  * @param expressApp {*|Express} - the express app object
  */
-module.exports.setup = function(expressApp) {
+module.exports.setup = function setup(expressApp) {
   app = expressApp;
 };
 
 /**
  * Returns express instance so it can be injected elsewhere
  */
-module.exports.getApp = function() {
+module.exports.getApp = function getApp() {
   return app;
 };

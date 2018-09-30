@@ -13,12 +13,14 @@ describe('id validator tests', () => {
   let IdValidator;
 
   beforeEach(function() {
-    IdValidator = proxyquire('lib/id-validator', { 'declare-validator': { 'Middleware': ValidatorMock } });
+    IdValidator = proxyquire('lib/id-validator', {
+      'declare-validator': { Middleware: ValidatorMock }
+    });
   });
 
   it('should instantiate the validator', function() {
     const next = sinon.stub();
-    let validator = new IdValidator({}, {}, next);
+    const validator = new IdValidator({}, {}, next);
     expect(validator.getConfig()[0].name).to.equal('restaurantId');
   });
 });

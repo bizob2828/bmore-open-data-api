@@ -12,16 +12,21 @@ const constants = require('lib/constants');
  * @param {Int} limit limit on request
  * @param {Int} totalCount number of db records
  */
-function generateLinks(url, page, limit, totalCount) {
-  let links = [];
+function generateLinks({ url, page, limit, totalCount }) {
+  const links = [];
 
   if (page !== 1) {
     links.push({ rel: 'first', href: `${url}?limit=${limit}&page=1` });
     links.push({ rel: 'prev', href: `${url}?limit=${limit}&page=${page - 1}` });
   }
 
-  links.push({ rel: 'next', href: `${url}?limit=${limit}&page=${page + 1}`});
-  links.push({ rel: 'last', href: `${url}?limit=${limit}&page=${Math.ceil(parseInt(totalCount) / parseInt(limit))}`});
+  links.push({ rel: 'next', href: `${url}?limit=${limit}&page=${page + 1}` });
+  links.push({
+    rel: 'last',
+    href: `${url}?limit=${limit}&page=${Math.ceil(
+      parseInt(totalCount) / parseInt(limit)
+    )}`
+  });
 
   return links;
 }
@@ -35,30 +40,48 @@ function generateLinks(url, page, limit, totalCount) {
  * @return {Promise}
  */
 module.exports.getAll = (req, res) => {
-  let limit = parseInt(req.query.limit) || 100
-    , page = parseInt(req.query.page) || 1
-    , stationId = parseInt(req.query.station_id)
-    , offset = page === 1 ? 0 : (page - 1) * limit
-    , params = {
-      limit: limit,
-      offset: offset,
-      order: 'name ASC',
-      include: [{ model: policeStationModel, as: 'police_station', attributes: constants.STATION_COLUMNS }],
-      attributes: constants.RESTAURANT_COLUMNS
-    };
+  const limit = parseInt(req.query.limit) || 100;
+  const page = parseInt(req.query.page) || 1;
+  const stationId = parseInt(req.query.station_id);
+  const offset = page === 1 ? 0 : (page - 1) * limit;
+  const params = {
+    limit,
+    offset,
+    order: 'name ASC',
+    include: [
+      {
+        model: policeStationModel,
+        as: 'police_station',
+        attributes: constants.STATION_COLUMNS
+      }
+    ],
+    attributes: constants.RESTAURANT_COLUMNS
+  };
 
   // filter by stationId if qp is passed in
   if (stationId) {
-    params.where = { stationId: stationId };
+    params.where = { stationId };
   }
 
-  return restaurantModel.findAndCountAll(params).then((results) => {
-    let links = generateLinks(`${req.baseUrl}${req._parsedUrl.pathname}`, page, limit, results.count);
-    res.respond(_.map(results.rows, (data) => data.dataValues), 200, links, results.count);
-  })
-  .catch((err) => {
-    res.error(err, 500, 'Unable to get all restaurants');
-  });
+  return restaurantModel
+    .findAndCountAll(params)
+    .then((results) => {
+      const links = generateLinks({
+        url: `${req.baseUrl}${req._parsedUrl.pathname}`,
+        page,
+        limit,
+        totalCount: results.count
+      });
+      res.respond(
+        _.map(results.rows, (data) => data.dataValues),
+        200,
+        links,
+        results.count
+      );
+    })
+    .catch((err) => {
+      res.error(err, 500, 'Unable to get all restaurants');
+    });
 };
 
 /**
@@ -67,25 +90,30 @@ module.exports.getAll = (req, res) => {
  * @param {Object} res response object
  * @return {Promise}
  */
-module.exports.get = (req, res) => {
-  return restaurantModel.findOne({
-    order: 'name ASC',
-    where: { id: req.params.restaurantId },
-    include: [ { model: policeStationModel, as: 'police_station', attributes: constants.STATION_COLUMNS } ],
-    attributes: constants.RESTAURANT_COLUMNS
-  })
-  .then((results) => {
-    if (results) {
-      res.respond(results.dataValues);
-    } else {
-      res.respond({ message: 'Restaurant not found' }, 404);
-    }
-  })
-  .catch((err) => {
-    res.error(err, 500, 'Unable to retrieve restaurant');
-  });
-
-};
+module.exports.get = (req, res) =>
+  restaurantModel
+    .findOne({
+      order: 'name ASC',
+      where: { id: req.params.restaurantId },
+      include: [
+        {
+          model: policeStationModel,
+          as: 'police_station',
+          attributes: constants.STATION_COLUMNS
+        }
+      ],
+      attributes: constants.RESTAURANT_COLUMNS
+    })
+    .then((results) => {
+      if (results) {
+        res.respond(results.dataValues);
+      } else {
+        res.respond({ message: 'Restaurant not found' }, 404);
+      }
+    })
+    .catch((err) => {
+      res.error(err, 500, 'Unable to retrieve restaurant');
+    });
 
 /**
  * Deletes a restaurant by id
@@ -93,18 +121,19 @@ module.exports.get = (req, res) => {
  * @param {Object} res response object
  * @return {Promise}
  */
-module.exports.delete = (req, res) => {
-  return restaurantModel.destroy({ where: { id: req.params.restaurantId }}).then((results) => {
-    if (results) {
-      res.respond({}, 204);
-    } else {
-      res.respond({ message: 'Restaurant not found' }, 404);
-    }
-  })
-  .catch((err) => {
-    res.error(err, 500, 'Unable to delete restaurant');
-  });
-};
+module.exports.delete = (req, res) =>
+  restaurantModel
+    .destroy({ where: { id: req.params.restaurantId } })
+    .then((results) => {
+      if (results) {
+        res.respond({}, 204);
+      } else {
+        res.respond({ message: 'Restaurant not found' }, 404);
+      }
+    })
+    .catch((err) => {
+      res.error(err, 500, 'Unable to delete restaurant');
+    });
 
 /**
  * Creates a restaurant
@@ -113,25 +142,26 @@ module.exports.delete = (req, res) => {
  * @param {Object} res response object
  * @return {Promise}
  */
-module.exports.create = (req, res) => {
-  return utils.getGeoData({ address: req.body.address, zip: req.body.zip }).then((geoData) => {
-    return restaurantModel.create({
-      name: req.body.name,
-      zip: req.body.zip,
-      hood: req.body.hood,
-      address: req.body.address,
-      stationId: req.body.station_id,
-      lat: geoData.lat,
-      long: geoData.long
+module.exports.create = (req, res) =>
+  utils
+    .getGeoData({ address: req.body.address, zip: req.body.zip })
+    .then((geoData) =>
+      restaurantModel.create({
+        name: req.body.name,
+        zip: req.body.zip,
+        hood: req.body.hood,
+        address: req.body.address,
+        stationId: req.body.station_id,
+        lat: geoData.lat,
+        long: geoData.long
+      })
+    )
+    .then((results) => {
+      res.respond(results.dataValues);
+    })
+    .catch((err) => {
+      res.error(err, 500, 'Unable to create restaurant');
     });
-  })
-  .then((results) => {
-    res.respond(results.dataValues);
-  })
-  .catch((err) => {
-    res.error(err, 500, 'Unable to create restaurant');
-  });
-};
 
 /**
  * Updates a restaurant by id
@@ -141,7 +171,7 @@ module.exports.create = (req, res) => {
  * @return {Promise}
  */
 module.exports.update = (req, res) => {
-  let updateOpts = {
+  const updateOpts = {
     name: req.body.name,
     zip: req.body.zip,
     hood: req.body.hood,
@@ -154,14 +184,16 @@ module.exports.update = (req, res) => {
     updateOpts.long = req.geoData.long;
   }
 
-  return restaurantModel.update(updateOpts, { where: { id: req.params.restaurantId } }).then((results) => {
-    if (results[0]) {
-      res.respond({ message: 'Restaurant updated' });
-    } else {
-      res.respond({ message: 'Restaurant not found' }, 404);
-    }
-  })
-  .catch((err) => {
-    res.error(err, 500, 'Unable to update restaurant');
-  });
+  return restaurantModel
+    .update(updateOpts, { where: { id: req.params.restaurantId } })
+    .then((results) => {
+      if (results[0]) {
+        res.respond({ message: 'Restaurant updated' });
+      } else {
+        res.respond({ message: 'Restaurant not found' }, 404);
+      }
+    })
+    .catch((err) => {
+      res.error(err, 500, 'Unable to update restaurant');
+    });
 };

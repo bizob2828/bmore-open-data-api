@@ -1,3 +1,6 @@
 node_modules
 test/reports
 instrumentation.log
+*.swo
+*.swp
+.nyc_output/

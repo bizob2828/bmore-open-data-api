@@ -7,10 +7,9 @@ const proxyquire = require('proxyquire').noCallThru();
 chai.use(require('sinon-chai'));
 
 describe('police controller tests', () => {
-  let modelMock
-    , req = {}
-    , res = {}
-    , controller;
+  const req = {};
+  const res = {};
+  let modelMock, controller;
 
   beforeEach(() => {
     modelMock = {
@@ -36,20 +35,20 @@ describe('police controller tests', () => {
         expect(res.respond.args[0][0]).to.deep.equal(['foo', 'bar', 'baz']);
         expect(res.error.callCount).to.equal(0);
       });
-
     });
 
     it('should respond with error when findAll call fails', () => {
-      let err = new Error('no stations');
+      const err = new Error('no stations');
       modelMock.findAll.rejects(err);
 
       return controller.getAll(req, res).then(() => {
         expect(res.respond.callCount).to.equal(0);
-        expect(res.error.args[0]).to.deep.equal([err, 500, 'Unable to get all police stations']);
+        expect(res.error.args[0]).to.deep.equal([
+          err,
+          500,
+          'Unable to get all police stations'
+        ]);
       });
-
     });
   });
-
 });
-

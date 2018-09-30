@@ -13,12 +13,14 @@ describe('create validator tests', () => {
   let CreateValidator;
 
   beforeEach(function() {
-    CreateValidator = proxyquire('lib/create-validator', { 'declare-validator': { 'Middleware': ValidatorMock } });
+    CreateValidator = proxyquire('lib/create-validator', {
+      'declare-validator': { Middleware: ValidatorMock }
+    });
   });
 
   it('should instantiate the validator', function() {
     const next = sinon.stub();
-    let validator = new CreateValidator({}, {}, next);
+    const validator = new CreateValidator({}, {}, next);
     expect(validator.getConfig()[0].name).to.equal('name');
     expect(validator.getConfig()[1].name).to.equal('zip');
     expect(validator.getConfig()[2].name).to.equal('hood');

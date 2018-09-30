@@ -7,11 +7,7 @@ const proxyquire = require('proxyquire').noCallThru();
 chai.use(require('sinon-chai'));
 
 describe('edit lookup tests', () => {
-  let utilsMock
-    , editLookup
-    , req
-    , res
-    , next;
+  let utilsMock, editLookup, req, res, next;
 
   beforeEach(() => {
     req = { body: {} };
@@ -24,7 +20,6 @@ describe('edit lookup tests', () => {
     editLookup = proxyquire('lib/edit-lookup', {
       './get-geo-data': utilsMock
     });
-
   });
 
   it('should get geodata if zip exists', () => {
@@ -58,6 +53,5 @@ describe('edit lookup tests', () => {
       expect(req.geoData).to.equal(undefined);
       expect(next.callCount).to.equal(1);
     });
-
   });
 });

@@ -7,13 +7,8 @@ const proxyquire = require('proxyquire').noCallThru();
 chai.use(require('sinon-chai'));
 
 describe('request stats tests', () => {
-  let next
-    , req
-    , res
-    , memMock
-    , HeapDiff = function() { }
-    , onHeaders
-    , requestStats;
+  const HeapDiff = function() {};
+  let next, req, res, memMock, onHeaders, requestStats;
 
   beforeEach(() => {
     next = sinon.stub();
@@ -22,10 +17,12 @@ describe('request stats tests', () => {
     res.setHeader = sinon.stub();
 
     memMock = {
-      HeapDiff: HeapDiff
+      HeapDiff
     };
 
-    HeapDiff.prototype.end = () => { return { change: { details: [ { what: 'String', '+': 100 }] } }; };
+    HeapDiff.prototype.end = () => ({
+      change: { details: [{ what: 'String', '+': 100 }] }
+    });
 
     process.memoryUsage = sinon.stub();
     process.memoryUsage.onCall(0).returns({ rss: 100 });
@@ -41,13 +38,12 @@ describe('request stats tests', () => {
 
   it('should set appropriate x headers', function() {
     onHeaders.yields();
-    let stats = requestStats();
+    const stats = requestStats();
     stats(req, res, next);
-    expect(res.setHeader.args[0]).to.deep.equal(['X-Total-Mem-Usage', 0.00039999999999999996 ]);
-    expect(res.setHeader.args[1]).to.deep.equal(['X-String-Objects', 100 ]);
-
+    expect(res.setHeader.args[0]).to.deep.equal([
+      'X-Total-Mem-Usage',
+      0.00039999999999999996
+    ]);
+    expect(res.setHeader.args[1]).to.deep.equal(['X-String-Objects', 100]);
   });
-
 });
-
-
