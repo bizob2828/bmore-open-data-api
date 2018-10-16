@@ -47,7 +47,7 @@ module.exports.getAll = (req, res) => {
   const params = {
     limit,
     offset,
-    order: 'name ASC',
+    order: [['name', 'ASC']],
     include: [
       {
         model: policeStationModel,
@@ -80,7 +80,7 @@ module.exports.getAll = (req, res) => {
       );
     })
     .catch((err) => {
-      res.error(err, 500, 'Unable to get all restaurants');
+      res.error(err, 'Unable to get all restaurants');
     });
 };
 
@@ -93,7 +93,7 @@ module.exports.getAll = (req, res) => {
 module.exports.get = (req, res) =>
   restaurantModel
     .findOne({
-      order: 'name ASC',
+      order: [['name', 'ASC']],
       where: { id: req.params.restaurantId },
       include: [
         {
@@ -112,7 +112,7 @@ module.exports.get = (req, res) =>
       }
     })
     .catch((err) => {
-      res.error(err, 500, 'Unable to retrieve restaurant');
+      res.error(err, 'Unable to retrieve restaurant');
     });
 
 /**
@@ -132,7 +132,7 @@ module.exports.delete = (req, res) =>
       }
     })
     .catch((err) => {
-      res.error(err, 500, 'Unable to delete restaurant');
+      res.error(err, 'Unable to delete restaurant');
     });
 
 /**
@@ -160,7 +160,7 @@ module.exports.create = (req, res) =>
       res.respond(results.dataValues);
     })
     .catch((err) => {
-      res.error(err, 500, 'Unable to create restaurant');
+      res.error(err, 'Unable to create restaurant');
     });
 
 /**
@@ -194,6 +194,6 @@ module.exports.update = (req, res) => {
       }
     })
     .catch((err) => {
-      res.error(err, 500, 'Unable to update restaurant');
+      res.error(err, 'Unable to update restaurant');
     });
 };

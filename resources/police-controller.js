@@ -15,5 +15,5 @@ module.exports.getAll = (req, res) =>
       res.respond(_.map(results, (data) => data.dataValues));
     })
     .catch((err) => {
-      res.error(err, 500, 'Unable to get all police stations');
+      res.error(err, 'Unable to get all police stations');
     });
