@@ -6,10 +6,10 @@ const proxyquire = require('proxyquire').noCallThru();
 
 chai.use(require('sinon-chai'));
 
-describe('edit lookup tests', () => {
+describe('edit lookup tests', function() {
   let utilsMock, editLookup, req, res, next;
 
-  beforeEach(() => {
+  beforeEach(function() {
     req = { body: {} };
     next = sinon.stub();
 
@@ -22,7 +22,7 @@ describe('edit lookup tests', () => {
     });
   });
 
-  it('should get geodata if zip exists', () => {
+  it('should get geodata if zip exists', function() {
     req.body.zip = 21211;
     utilsMock.getGeoData.resolves('foo');
     return editLookup(req, res, next).then(() => {
@@ -31,7 +31,7 @@ describe('edit lookup tests', () => {
     });
   });
 
-  it('should get geodata if address exists', () => {
+  it('should get geodata if address exists', function() {
     req.body.address = '616 w 33rd';
     utilsMock.getGeoData.resolves('bar');
     return editLookup(req, res, next).then(() => {
@@ -40,13 +40,13 @@ describe('edit lookup tests', () => {
     });
   });
 
-  it('should call next if no address or zip', () => {
+  it('should call next if no address or zip', function() {
     editLookup(req, res, next);
     expect(next.callCount).to.equal(1);
     expect(req.geoData).to.equal(undefined);
   });
 
-  it('should call next if getGeoData fails', () => {
+  it('should call next if getGeoData fails', function() {
     req.body.address = '616 w 33rd';
     utilsMock.getGeoData.rejects();
     return editLookup(req, res, next).then(() => {

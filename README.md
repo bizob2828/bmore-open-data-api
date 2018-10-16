@@ -8,7 +8,7 @@ Provides CRUD for Baltimore Restaurants.  There is an association with the polic
 brew install mysql
 ```
 
-* Node.js > 4.x
+* Node.js > 8.x
 https://github.com/creationix/nvm
 
 * Google Map API Key that is set as an environment var
@@ -49,6 +49,12 @@ npm test
 ```
 
 Functional:
+First run, create db and seed data:
+```
+echo "CREATE DATABASE open_data_test;" | mysql -h <HOST> -u <USERNAME> -p<PASSWORD>
+NODE_ENV=test npm run seed
+```
+
 ```
 npm run func-test
 ```

@@ -6,12 +6,12 @@ const proxyquire = require('proxyquire').noCallThru();
 
 chai.use(require('sinon-chai'));
 
-describe('police controller tests', () => {
+describe('police controller tests', function() {
   const req = {};
   const res = {};
   let modelMock, controller;
 
-  beforeEach(() => {
+  beforeEach(function() {
     modelMock = {
       findAll: sinon.stub()
     };
@@ -23,8 +23,8 @@ describe('police controller tests', () => {
     });
   });
 
-  describe('getAll tests', () => {
-    it('should respond with appropriate data', () => {
+  describe('getAll tests', function() {
+    it('should respond with appropriate data', function() {
       modelMock.findAll.resolves([
         { dataValues: 'foo' },
         { dataValues: 'bar' },
@@ -37,7 +37,7 @@ describe('police controller tests', () => {
       });
     });
 
-    it('should respond with error when findAll call fails', () => {
+    it('should respond with error when findAll call fails', function() {
       const err = new Error('no stations');
       modelMock.findAll.rejects(err);
 
@@ -45,7 +45,6 @@ describe('police controller tests', () => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           err,
-          500,
           'Unable to get all police stations'
         ]);
       });

@@ -9,7 +9,7 @@ const ValidatorMock = require('../mocks/validator').ValidatorMock;
 
 chai.use(sinonChai);
 
-describe('id validator tests', () => {
+describe('id validator tests', function() {
   let IdValidator;
 
   beforeEach(function() {

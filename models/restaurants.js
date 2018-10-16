@@ -11,17 +11,16 @@ module.exports = function restaurants(sequelize, DataTypes) {
       long: DataTypes.FLOAT
     },
     {
-      timestamps: false,
-      classMethods: {
-        associate(models) {
-          Restaurants.belongsTo(models.PoliceStations, {
-            foreignKey: 'stationId',
-            as: 'police_station'
-          });
-        }
-      }
+      timestamps: false
     }
   );
+
+  Restaurants.associate = function associate(models) {
+    Restaurants.belongsTo(models.PoliceStations, {
+      foreignKey: 'stationId',
+      as: 'police_station'
+    });
+  };
 
   return Restaurants;
 };

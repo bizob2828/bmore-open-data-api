@@ -7,7 +7,7 @@ const _ = require('lodash');
 
 chai.use(require('sinon-chai'));
 
-describe('restaurant controller tests', () => {
+describe('restaurant controller tests', function() {
   const req = {
     baseUrl: '/api',
     _parsedUrl: { pathname: '/resource' },
@@ -20,7 +20,7 @@ describe('restaurant controller tests', () => {
 
   let restaurantMock, stationMock, controller;
 
-  beforeEach(() => {
+  beforeEach(function() {
     geoMock.getGeoData = sinon.stub();
     stationMock = sinon.stub();
 
@@ -41,8 +41,8 @@ describe('restaurant controller tests', () => {
     });
   });
 
-  describe('getAll tests', () => {
-    it('should respond with appropriate data', () => {
+  describe('getAll tests', function() {
+    it('should respond with appropriate data', function() {
       restaurantMock.findAndCountAll.resolves({
         rows: [{ dataValues: 'foo' }, { dataValues: 'baz' }],
         count: 500
@@ -63,7 +63,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should filter by police stations when qp is passed in', () => {
+    it('should filter by police stations when qp is passed in', function() {
       restaurantMock.findAndCountAll.resolves({ rows: [] });
       req.query.station_id = '8';
       return controller.getAll(req, res).then(() => {
@@ -73,7 +73,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should use limit/page qp when passed in', () => {
+    it('should use limit/page qp when passed in', function() {
       restaurantMock.findAndCountAll.resolves({ rows: [], count: 500 });
       req.query.limit = 10;
       req.query.page = 15;
@@ -87,7 +87,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should respond with error when findAndCountAll call fails', () => {
+    it('should respond with error when findAndCountAll call fails', function() {
       const err = new Error('no restaurants');
       restaurantMock.findAndCountAll.rejects(err);
 
@@ -95,19 +95,18 @@ describe('restaurant controller tests', () => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           err,
-          500,
           'Unable to get all restaurants'
         ]);
       });
     });
   });
 
-  describe('get tests', () => {
-    beforeEach(() => {
+  describe('get tests', function() {
+    beforeEach(function() {
       req.params.restaurantId = 1;
     });
 
-    it('should return a restaurant', () => {
+    it('should return a restaurant', function() {
       restaurantMock.findOne.resolves({ dataValues: 'restaurant' });
 
       return controller.get(req, res).then(() => {
@@ -116,7 +115,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should return 404 if restaurant id is not found', () => {
+    it('should return 404 if restaurant id is not found', function() {
       restaurantMock.findOne.resolves(0);
 
       return controller.get(req, res).then(() => {
@@ -128,7 +127,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should throw 500 for unexpected error', () => {
+    it('should return error for unexpected error', function() {
       const error = new Error('db error');
       restaurantMock.findOne.rejects(error);
 
@@ -136,19 +135,18 @@ describe('restaurant controller tests', () => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           error,
-          500,
           'Unable to retrieve restaurant'
         ]);
       });
     });
   });
 
-  describe('delete tests', () => {
-    beforeEach(() => {
+  describe('delete tests', function() {
+    beforeEach(function() {
       req.params.restaurantId = 1;
     });
 
-    it('should delete a restaurant', () => {
+    it('should delete a restaurant', function() {
       restaurantMock.destroy.resolves('done');
       return controller.delete(req, res).then(() => {
         expect(res.error.callCount).to.equal(0);
@@ -156,7 +154,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should return 404 on delete when restaurant does not exist', () => {
+    it('should return 404 on delete when restaurant does not exist', function() {
       restaurantMock.destroy.resolves(0);
       return controller.delete(req, res).then(() => {
         expect(res.error.callCount).to.equal(0);
@@ -167,22 +165,21 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should throw 500 for unexpected error during delete', () => {
+    it('should throw error for unexpected error during delete', function() {
       const error = new Error('no delete for you');
       restaurantMock.destroy.rejects(error);
       return controller.delete(req, res).then(() => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           error,
-          500,
           'Unable to delete restaurant'
         ]);
       });
     });
   });
 
-  describe('create tests', () => {
-    it('should create a restaurant', () => {
+  describe('create tests', function() {
+    it('should create a restaurant', function() {
       const createData = {};
       const latLong = { lat: 30, long: 10 };
       const body = {
@@ -204,7 +201,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should throw 500 for unexpected error', () => {
+    it('should throw error for unexpected error', function() {
       const error = new Error('create failed');
       geoMock.getGeoData.resolves({});
       restaurantMock.create.rejects(error);
@@ -213,13 +210,12 @@ describe('restaurant controller tests', () => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           error,
-          500,
           'Unable to create restaurant'
         ]);
       });
     });
 
-    it('should should throw 500 if getting geo data fails', () => {
+    it('should should throw error if getting geo data fails', function() {
       const error = new Error('geo data failed');
       geoMock.getGeoData.rejects(error);
 
@@ -227,15 +223,14 @@ describe('restaurant controller tests', () => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           error,
-          500,
           'Unable to create restaurant'
         ]);
       });
     });
   });
 
-  describe('update tests', () => {
-    it('should update a restaurant', () => {
+  describe('update tests', function() {
+    it('should update a restaurant', function() {
       restaurantMock.update.resolves(['done']);
       return controller.update(req, res).then(() => {
         expect(res.error.callCount).to.equal(0);
@@ -245,7 +240,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should update lat long if req.geoData exists', () => {
+    it('should update lat long if req.geoData exists', function() {
       const req = { params: {}, body: {} };
       req.geoData = { lat: 0, long: 0 };
       req.body.address = 'foobar';
@@ -268,7 +263,7 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should return 404 on update when restaurant does not exist', () => {
+    it('should return 404 on update when restaurant does not exist', function() {
       restaurantMock.update.resolves([]);
       return controller.update(req, res).then(() => {
         expect(res.error.callCount).to.equal(0);
@@ -279,14 +274,13 @@ describe('restaurant controller tests', () => {
       });
     });
 
-    it('should throw 500 for unexpected error during delete', () => {
+    it('should throw error for unexpected error during delete', function() {
       const error = new Error('update failed');
       restaurantMock.update.rejects(error);
       return controller.update(req, res).then(() => {
         expect(res.respond.callCount).to.equal(0);
         expect(res.error.args[0]).to.deep.equal([
           error,
-          500,
           'Unable to update restaurant'
         ]);
       });

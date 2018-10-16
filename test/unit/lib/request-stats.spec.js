@@ -6,11 +6,11 @@ const proxyquire = require('proxyquire').noCallThru();
 
 chai.use(require('sinon-chai'));
 
-describe('request stats tests', () => {
+describe('request stats tests', function() {
   const HeapDiff = function() {};
   let next, req, res, memMock, onHeaders, requestStats;
 
-  beforeEach(() => {
+  beforeEach(function() {
     next = sinon.stub();
     req = {};
     res = {};

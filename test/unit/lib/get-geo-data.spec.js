@@ -5,11 +5,12 @@ const sinon = require('sinon');
 const proxyquire = require('proxyquire').noCallThru();
 
 chai.use(require('sinon-chai'));
+chai.use(require('chai-as-promised'));
 
-describe('geodata tests', () => {
+describe('geodata tests', function() {
   let gmapsMock, geoCodeMock, getGeo;
 
-  beforeEach(() => {
+  beforeEach(function() {
     geoCodeMock = { geocode: sinon.stub() };
     gmapsMock = {
       createClient: sinon.stub().returns(geoCodeMock)
@@ -20,7 +21,7 @@ describe('geodata tests', () => {
     });
   });
 
-  it('should return lat/long on success', () => {
+  it('should return lat/long on success', function() {
     geoCodeMock.geocode.yields(null, {
       json: { results: [{ geometry: { location: { lat: 10, lng: 10 } } }] }
     });
@@ -32,10 +33,8 @@ describe('geodata tests', () => {
     });
   });
 
-  it('should return error on failure', () => {
+  it('should return error on failure', function() {
     geoCodeMock.geocode.yields('my err');
-    return getGeo.getGeoData({}).catch((err) => {
-      expect(err).to.equal('my err');
-    });
+    return expect(getGeo.getGeoData({})).to.have.been.rejected;
   });
 });
