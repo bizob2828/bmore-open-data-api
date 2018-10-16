@@ -10,9 +10,7 @@
     "lint": "eslint . --fix",
     "serve": "nodemon --watch . --ignore ./node_modules -x \"npm start\"",
     "start": "NODE_PATH=$NODE_PATH:. node server",
-    "seed": "sequelize db:migrate && sequelize db:seed:all",
-    "precommit": "lint-staged",
-    "prepush": "auditmated"
+    "seed": "sequelize db:migrate && sequelize db:seed:all"
   },
   "lint-staged": {
     "**/*.js": [
@@ -20,6 +18,12 @@
       "npm run lint",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "auditmated"
+    }
   },
   "author": "Bob Evans",
   "license": "MIT",
