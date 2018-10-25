@@ -90,11 +90,11 @@ module.exports.getAll = (req, res) => {
  * @param {Object} res response object
  * @return {Promise}
  */
-module.exports.get = (req, res) =>
+module.exports.get = ({ params: { restaurantId: id } }, res) =>
   restaurantModel
     .findOne({
       order: [['name', 'ASC']],
-      where: { id: req.params.restaurantId },
+      where: { id },
       include: [
         {
           model: policeStationModel,
@@ -121,9 +121,9 @@ module.exports.get = (req, res) =>
  * @param {Object} res response object
  * @return {Promise}
  */
-module.exports.delete = (req, res) =>
+module.exports.delete = ({ params: { restaurantId: id } }, res) =>
   restaurantModel
-    .destroy({ where: { id: req.params.restaurantId } })
+    .destroy({ where: { id } })
     .then((results) => {
       if (results) {
         res.respond({}, 204);
@@ -142,26 +142,28 @@ module.exports.delete = (req, res) =>
  * @param {Object} res response object
  * @return {Promise}
  */
-module.exports.create = (req, res) =>
-  utils
-    .getGeoData({ address: req.body.address, zip: req.body.zip })
-    .then((geoData) =>
+module.exports.create = (req, res) => {
+  const { name, zip, hood, address, station_id: stationId } = req.body;
+  return utils
+    .getGeoData({ address, zip })
+    .then(({ lat, long }) =>
       restaurantModel.create({
-        name: req.body.name,
-        zip: req.body.zip,
-        hood: req.body.hood,
-        address: req.body.address,
-        stationId: req.body.station_id,
-        lat: geoData.lat,
-        long: geoData.long
+        name,
+        zip,
+        hood,
+        address,
+        stationId,
+        lat,
+        long
       })
     )
-    .then((results) => {
-      res.respond(results.dataValues);
+    .then(({ dataValues }) => {
+      res.respond(dataValues);
     })
     .catch((err) => {
       res.error(err, 'Unable to create restaurant');
     });
+};
 
 /**
  * Updates a restaurant by id
