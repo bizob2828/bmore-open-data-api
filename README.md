@@ -67,5 +67,5 @@ In development, instrumentation is off by default.  If you want to enable it. Se
 You will see results of requests logged to ./instrumentation.log or directly in the console
 
 ```
-info: Response Time: 19.261ms, Memory Used: 0.08191999999999999, String Objects: 244
+{"level":"info","message":"Request ID: 589a9702-d926-4572-88ba-a7b0d5bc0ee3, Response Time: 29.926ms, Memory Used: -0.221184, String Objects: 832"}
 ```

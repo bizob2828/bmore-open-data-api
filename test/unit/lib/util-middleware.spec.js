@@ -14,7 +14,7 @@ describe('util middleware tests', function() {
     winstonMock = {
       add: sinon.stub(),
       log: sinon.stub(),
-      transports: { File: sinon.stub() }
+      transports: { File: sinon.stub(), Console: sinon.stub() }
     };
     next = sinon.stub();
     req = {};
@@ -37,6 +37,7 @@ describe('util middleware tests', function() {
 
   describe('winston init', function() {
     it('should add a file transport for logs', function() {
+      expect(winstonMock.transports.Console).to.have.been.called;
       expect(winstonMock.transports.File).to.have.been.calledWith({
         filename: 'instrumentation.log'
       });
