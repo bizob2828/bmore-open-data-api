@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bizob2828/bmore-open-data-api.svg?branch=master)](https://travis-ci.org/bizob2828/bmore-open-data-api)
+
 # Baltimore Restaurant API
 Provides CRUD for Baltimore Restaurants.  There is an association with the police district.  It also does geocoding to obtain lat, long based on Address.  This is intended to be used with https://github.com/bizob2828/bmore-open-data-ui.
 
