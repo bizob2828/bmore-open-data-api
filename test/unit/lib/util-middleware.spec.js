@@ -29,6 +29,7 @@ describe('util middleware tests', function() {
     };
 
     utilsMiddleware = proxyquire('lib/util-middleware', {
+      uuid: () => 'new-id',
       config: configMock,
       winston: winstonMock
     });
@@ -84,7 +85,7 @@ describe('util middleware tests', function() {
     it('should call winston if instrumentation is enabled', function() {
       res.respond('foo');
       expect(winstonMock.log.args[0][1]).to.equal(
-        'Response Time: 30ms, Memory Used: 10, String Objects: 100'
+        'Request ID: new-id, Response Time: 30ms, Memory Used: 10, String Objects: 100'
       );
     });
 
@@ -124,7 +125,7 @@ describe('util middleware tests', function() {
     it('should call winston if instrumentation is enabled', function() {
       res.error(new Error('foo'));
       expect(winstonMock.log.args[0][1]).to.equal(
-        'Response Time: 30ms, Memory Used: 10, String Objects: 100'
+        'Request ID: new-id, Response Time: 30ms, Memory Used: 10, String Objects: 100'
       );
     });
 
