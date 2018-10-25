@@ -1,4 +1,5 @@
 'use strict';
+
 const express = require('express');
 const app = express();
 const apiApp = require('./app');
@@ -9,6 +10,12 @@ return models.sequelize
   .sync()
   .then(() => {
     apiApp.setup(app);
+    // eslint-disable-next-line no-console
+    console.log(
+      `Application has loaded ${
+        Object.keys(require('module')._cache).length
+      } modules`
+    );
     // eslint-disable-next-line no-console
     app.listen(PORT, () => console.log(`Open Data API Listening on ${PORT}`));
   })

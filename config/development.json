@@ -1,5 +1,5 @@
 {
   "instrumentation": {
-    "enabled": false
+    "enabled": true
   }
 }
