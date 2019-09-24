@@ -3,6 +3,7 @@ name: test
 on:
   push:
     branches:
+      - '*'
       - '!master'
       - '!develop'
       - '!release/1.x'
