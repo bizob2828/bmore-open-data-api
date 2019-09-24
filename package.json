@@ -35,11 +35,11 @@
     "cors": "^2.8.1",
     "declare-validator": "^1.1.0",
     "express": "^4.14.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "mysql2": "^1.6.1",
     "on-headers": "^1.0.1",
     "response-time": "^2.3.1",
-    "sequelize": "^4.39.0",
+    "sequelize": "^4.44.3",
     "sequelize-cli": "^4.1.1",
     "uuid": "^3.3.2",
     "winston": "^3.1.0"
