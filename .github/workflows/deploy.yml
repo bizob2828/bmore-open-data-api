@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    tags:
+      - '*/*.*.*'
 
 jobs:
   test:
@@ -36,14 +39,11 @@ jobs:
       image: node:10
     steps:
       - uses: actions/checkout@v1
-        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
       - name: build artifact
-        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
         run: |
           npm ci
           ci-scripts/build.sh
       - name: Upload artifact
-        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
         uses: actions/upload-artifact@v1.0.0
         with:
           path: target
@@ -58,8 +58,6 @@ jobs:
       - uses: actions/download-artifact@v1.0.0
         with:
           name: build.tgz
-        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
       - name: deploy to foo
         run: ci-scripts/deploy.sh
-        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
 
