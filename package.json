@@ -30,7 +30,7 @@
   "dependencies": {
     "@google/maps": "^0.5.5",
     "bluebird": "^3.5.2",
-    "body-parser": "^1.15.2",
+    "body-parser": "^1.19.0",
     "config": "^2.0.1",
     "cors": "^2.8.1",
     "declare-validator": "^1.1.0",
@@ -51,7 +51,7 @@
     "eslint": "^5.7.0",
     "eslint-config-sparkpost": "^1.10.1",
     "husky": "^1.0.1",
-    "lint-staged": "^7.3.0",
+    "lint-staged": "^9.3.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.4",
     "nyc": "^13.0.1",
