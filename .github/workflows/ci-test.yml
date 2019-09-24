@@ -58,6 +58,8 @@ jobs:
       - uses: actions/download-artifact@v1.0.0
         with:
           name: build.tgz
+        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
       - name: deploy to foo
         run: ci-scripts/deploy.sh
+        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
 
