@@ -28,7 +28,8 @@ describe('app setup test', function() {
   it('should setup app accordingly', function() {
     configMock.instrumentation.enabled = true;
     appSetup.setup(app);
-    expect(app.use.callCount).to.equal(8);
+    //expect(app.use.callCount).to.equal(8);
+    expect(app.use.callCount).to.equal(7);
     expect(paramStub.init.callCount).to.equal(1);
   });
 

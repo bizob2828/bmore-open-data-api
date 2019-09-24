@@ -1,6 +1,6 @@
 'use strict';
 const responseTime = require('response-time');
-const requestStats = require('./lib/request-stats');
+//const requestStats = require('./lib/request-stats');
 const utilMiddleware = require('./lib/util-middleware');
 const resources = require('./resources');
 const bodyParser = require('body-parser');
@@ -13,7 +13,7 @@ module.exports.setup = function setup(app) {
 
   // only enable instrumentation middleware when config flag is enabled
   if (config.instrumentation.enabled) {
-    app.use(requestStats());
+    //app.use(requestStats());
     app.use(responseTime());
   }
   app.use(bodyParser.json({ limit: '50mb' }));
