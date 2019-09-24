@@ -23,9 +23,10 @@ jobs:
         npm test
       env:
         CI: true
+        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
-      if: matrix.node-version == strategy.matrix['node-version'][-1]
+      if: matrix['node-version'] == strategy.matrix['node-version'][-1]
       with:
         name: code-coverage-${{ matrix.node-version }}
         path: test/reports/unit/lcov-report
