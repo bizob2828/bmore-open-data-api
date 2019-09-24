@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     container:
-      image: node:10
+      image: bash
     steps:
       - name: deploy to foo
         run: ci-scripts/deploy.sh
