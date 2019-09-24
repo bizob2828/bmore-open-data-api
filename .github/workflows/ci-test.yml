@@ -35,8 +35,8 @@ jobs:
       with:
         name: code-coverage-${{ matrix.node-version }}
         path: test/reports/unit/lcov-report
-   - name: Publish coverage
-     run: node_modules/.bin/codecov -f test/reports/unit/lcov.info
-     if: matrix['node-version'] == '10.x'
-     env:
-       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Publish coverage
+      run: node_modules/.bin/codecov -f test/reports/unit/lcov.info
+      if: matrix['node-version'] == '10.x'
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
