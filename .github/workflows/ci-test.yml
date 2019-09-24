@@ -29,4 +29,12 @@ jobs:
       if: matrix['node-version'] == '10.x'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  deploy:
+    needs: test
+    container:
+      image: node:10
+    steps:
+      - name: deploy to foo
+        run: ci-scripts/deploy.sh
+        if: endsWith(github.ref, 'master')
 
