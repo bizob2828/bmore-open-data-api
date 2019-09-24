@@ -30,7 +30,7 @@
   "dependencies": {
     "@google/maps": "^0.5.5",
     "bluebird": "^3.5.2",
-    "body-parser": "^1.15.2",
+    "body-parser": "^1.19.0",
     "config": "^2.0.1",
     "cors": "^2.8.1",
     "declare-validator": "^1.1.0",
