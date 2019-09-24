@@ -29,14 +29,35 @@ jobs:
       if: matrix['node-version'] == '10.x'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-  deploy:
+  build:
     runs-on: ubuntu-latest
     needs: test
     container:
-      image: python:3.7-slim-stretch
+      image: node:10
     steps:
       - uses: actions/checkout@v1
+        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
+      - name: build artifact
+        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
+        run: |
+          npm ci
+          ci-scripts/build.sh
+      - name: Upload artifact
+        if: endsWith(github.ref, 'master') || endsWith(github.ref, 'develop') || endsWith(github.ref, 'release/1.x')
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          path: target
+          name: build.tgz
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    container:
+      image: python:3.7-slim-stretch
+    steps:
+      - uses: actions/download-artifact@v1.0.0
+        with:
+          name: build.tgz
       - name: deploy to foo
         run: ci-scripts/deploy.sh
-        if: endsWith(github.ref, 'master')
 
