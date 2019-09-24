@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: code-coverage-${{ matrix.node-version }}
-        path: test/reports/unit/lcov-report/**
+        path: test/reports/unit/lcov-report/bmore-open-data-api
