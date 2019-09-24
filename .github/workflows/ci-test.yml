@@ -1,4 +1,4 @@
-name: Node CI
+name: CI
 
 on: [push, pull_request]
 
@@ -23,8 +23,20 @@ jobs:
         npm test
       env:
         CI: true
+        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        JOB_CONTEXT: ${{ toJson(job) }}
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+        MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+        GITHUB_CONTEXT: ${{ toJson(github) }}
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
+      if: matrix['node-version'] == '10.x'
       with:
         name: code-coverage-${{ matrix.node-version }}
         path: test/reports/unit/lcov-report
+    - name: Publish coverage
+      run: node_modules/.bin/codecov -f test/reports/unit/lcov.info
+      if: matrix['node-version'] == '10.x'
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
