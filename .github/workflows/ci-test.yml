@@ -1,34 +1,23 @@
 name: CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [8.x, 10.x]
-
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: npm ci and test
       run: |
         npm ci
         npm test
-      env:
-        CI: true
-        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        JOB_CONTEXT: ${{ toJson(job) }}
-        RUNNER_CONTEXT: ${{ toJson(runner) }}
-        MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        STEPS_CONTEXT: ${{ toJson(steps) }}
-        GITHUB_CONTEXT: ${{ toJson(github) }}
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       if: matrix['node-version'] == '10.x'
@@ -36,7 +25,9 @@ jobs:
         name: code-coverage-${{ matrix.node-version }}
         path: test/reports/unit/lcov-report
     - name: Publish coverage
-      run: node_modules/.bin/codecov -f test/reports/unit/lcov.info
+      uses: codecov/codecov-action@v1.0.2
       if: matrix['node-version'] == '10.x'
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: test/reports/unit/lcov.info
+
