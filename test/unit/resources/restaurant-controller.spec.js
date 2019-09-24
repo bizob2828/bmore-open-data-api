@@ -63,7 +63,7 @@ describe('restaurant controller tests', function() {
       });
     });
 
-    it('should filter by police stations when qp is passed in', function() {
+    it.skip('should filter by police stations when qp is passed in', function() {
       restaurantMock.findAndCountAll.resolves({ rows: [] });
       req.query.station_id = '8';
       return controller.getAll(req, res).then(() => {
