@@ -1,13 +1,13 @@
 name: test
 
-on:
-  push:
-    branches: # this is stupid https://github.community/t5/GitHub-Actions/glob-matching-on-branches/m-p/32778#M1245
-      - '*'
-      - '*/*'
-      - '!master'
-      - '!develop'
-      - '!release/1.x'
+on: pull_request
+  #push:
+  #  branches: # this is stupid https://github.community/t5/GitHub-Actions/glob-matching-on-branches/m-p/32778#M1245
+  #    - '*'
+  #    - '*/*'
+  #    - '!master'
+  #    - '!develop'
+  #    - '!release/1.x'
 
 jobs:
   test:
