@@ -2,6 +2,8 @@ name: deploy
 
 on:
   push:
+    branch:
+      - release-branch
     tags:
       - '*/*.*.*'
 
@@ -55,9 +57,13 @@ jobs:
     container:
       image: python:3.7-slim-stretch
     steps:
+      - name: env test
+        run: |
+          pwd
+          ls
       - uses: actions/download-artifact@v1.0.0
         with:
           name: deploy-artifact
       - name: deploy to foo
-        run: ci-scripts/deploy.sh
+        run: deploy-artifact/ci-scripts/deploy.sh
 
