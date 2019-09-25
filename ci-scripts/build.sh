@@ -1,6 +1,8 @@
 #!/bin/bash
 
-./package.sh
+ls
+pwd
+ci-scripts/package.sh
 
 if [$? -ne 0]
   then
