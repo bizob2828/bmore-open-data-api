@@ -37,7 +37,7 @@ describe('police controller tests', function() {
       });
     });
 
-    it.skip('should respond with error when findAll call fails', function() {
+    it('should respond with error when findAll call fails', function() {
       const err = new Error('no stations');
       modelMock.findAll.rejects(err);
 
