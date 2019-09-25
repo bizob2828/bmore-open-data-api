@@ -1,5 +1,4 @@
 [![codecov](https://codecov.io/gh/bizob2828/bmore-open-data-api/branch/master/graph/badge.svg)](https://codecov.io/gh/bizob2828/bmore-open-data-api)
-testing
 ![](https://github.com/bizob2828/bmore-open-data-api/workflows/CI/badge.svg)
 
 # Baltimore Restaurant API
