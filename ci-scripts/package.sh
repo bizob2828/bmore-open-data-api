@@ -1,9 +1,10 @@
 #!/bin/bash
 echo "Creating Dist..."
 [ -d target/ ] && rm -rf target/
+[ -d release/ ] && rm -rf release/
 mkdir target
+mkdir release
 echo "Moving Project Files.."
-cp ci-scripts target/
 cp *.js target/
 cp README.md target/
 cp package*.json target/
@@ -41,3 +42,7 @@ echo -e "Packing Module...\n"
 cd target/
 npm ci --production
 npm pack
+cd ..
+echo "Copying artifacts to release folder"
+cp -r ci-scripts release/
+cp target/bmore-api*.tgz release/

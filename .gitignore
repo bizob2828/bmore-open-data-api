@@ -4,3 +4,5 @@ instrumentation.log
 *.swo
 *.swp
 .nyc_output/
+target/
+release/
