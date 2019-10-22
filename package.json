@@ -28,7 +28,7 @@
   "author": "Bob Evans",
   "license": "MIT",
   "dependencies": {
-    "@google/maps": "^0.5.5",
+    "@google/maps": "^1.0.2",
     "bluebird": "^3.5.2",
     "body-parser": "^1.19.0",
     "config": "^3.2.2",
