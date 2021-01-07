@@ -54,7 +54,7 @@
     "husky": "^3.0.5",
     "lint-staged": "^9.3.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.4",
+    "nodemon": "^2.0.7",
     "nyc": "^14.1.1",
     "prettier-eslint-cli": "^4.7.1",
     "proxyquire": "^2.1.0",
